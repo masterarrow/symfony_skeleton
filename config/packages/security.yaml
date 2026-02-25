@@ -1,0 +1,34 @@
+security:
+    password_hashers:
+        App\Entity\User:
+            algorithm: bcrypt
+            cost: 16
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticators:
+                - App\Security\SessionAuthenticator
+            entry_point: App\Security\SessionAuthenticator
+
+    access_control:
+        # User
+        - { path: ^/api/users$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }              # user_list (GET /users)\
+        - { path: ^/api/users/user/\d+$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }     # user_show (GET /users/{id})
+        - { path: ^/api/users/user/\d+$, methods: [DELETE], roles: IS_AUTHENTICATED_FULLY }  # user_delete (DELETE /users/{id})
+
+        # Profile and logout
+        - { path: ^/api/users/profile$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }        # user_profile (GET /profile)
+        - { path: ^/api/users/logout$, methods: [POST], roles: IS_AUTHENTICATED_FULLY }       # user_logout (POST /logout)
+
+        # - { path: ^/admin, roles: ROLE_ADMIN }

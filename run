@@ -1,0 +1,56 @@
+#!/bin/bash
+
+set -e
+
+show_help() {
+    echo "Usage: $0 [OPTION]"
+    echo "Docker for Symfony + Vue.js"
+    echo ""
+    echo "Options:"
+    echo "  -b, --build                 Build images and start containers"
+    echo "  -s, --stop                  Stop containers"
+    echo "  -c, --clear                 Stop and remove containers"
+    echo "  -cm, --create-migration     Create migrations"
+    echo "  -m, --migrate               Run migrations"
+    echo "  -h, --help                  Display this help message"
+    echo "  (no options)                Start containers in the background"
+}
+
+case "$1" in
+    -b|--build)
+        echo "🔨 Building images and starting containers..."
+        echo "Frontend available at http://localhost:5173"
+        echo "Backend available at http://localhost:8080/api"
+        docker compose up -d --build
+        ;;
+    -s|--stop)
+        echo "⏸️ Stoping containers..."
+        docker compose stop
+        ;;
+    -c|--clear)
+        echo "🛑 Stoping and removing containers..."
+        docker compose down
+        ;;
+    -cm|--create-migration)
+        echo "🔨 Creating migrations..."
+        docker compose exec php php bin/console doctrine:migrations:diff
+        ;;
+    -m|--migrate)
+        echo "🚀 Running migrations..."
+        docker compose exec php php bin/console doctrine:migrations:migrate
+        ;;
+    -h|--help)
+        show_help
+        ;;
+    "")
+        echo "🚀 Starting containers in the background..."
+        echo "Frontend available at http://localhost:5173"
+        echo "Backend available at http://localhost:8080/api"
+        docker compose up -d
+        ;;
+    *)
+        echo "❌ Unrecognized option: $1"
+        show_help
+        exit 1
+        ;;
+esac
