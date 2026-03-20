@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'TildaSansVF';
+  src:
+    url('/src/assets/fonts/TildaSansVF/TildaSans-VF.woff2') format('woff2'),
+    url('/src/assets/fonts/TildaSansVF/TildaSans-VF.woff') format('woff'),
+    url('/src/assets/fonts/TildaSansVF/TildaSans-VF.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'IntegralCF';
+  src:
+    url('/src/assets/fonts/IntegralCF/IntegralCF-Regular.woff2') format('woff2'),
+    url('/src/assets/fonts/IntegralCF/IntegralCF-Regular.woff') format('woff');
+}

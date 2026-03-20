@@ -8,7 +8,6 @@ use App\DTO\UserLoginDTO;
 use Psr\Log\LoggerInterface;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -63,13 +62,13 @@ class UserController extends AbstractController
 
             return $this->json([
                 'status' => true,
-                'user' => $newUser
+                'message' => 'Success'
             ], $isNew ? 201 : 200);
         } catch (\Exception $e) {
             $this->logger->error('User save failed: ' . $e->getMessage());
             return $this->json([
                 'status' => false,
-                'message' => $e->getMessage()
+                'error' => $e->getMessage()
             ]);
         }
     }
@@ -95,8 +94,8 @@ class UserController extends AbstractController
         if (!$limiter->consume(1)->isAccepted()) {
             return $this->json([
                 'status' => false,
-                'message' => 'Too many attempts'
-            ], 429);
+                'error' => 'Too many attempts'
+            ]);
         }
 
         $user = $this->userRepository->findOneBy(['email' => $dto->email]);
@@ -104,8 +103,8 @@ class UserController extends AbstractController
         if (!$user || !$passwordHasher->isPasswordValid($user, $dto->password)) {
             return $this->json([
                 'status' => false,
-                'message' => 'Invalid credentials'
-            ], Response::HTTP_UNAUTHORIZED);
+                'error' => 'Invalid credentials'
+            ]);
         }
 
         $session = $request->getSession();
@@ -124,7 +123,9 @@ class UserController extends AbstractController
                 'id' => $user->getId(),
                 'full_name' => $user->getFullName(),
                 'email' => $user->getEmail(),
-            ]
+                'roles' => $user->getRoles()
+            ],
+            'message' => 'Login successful'
         ]);
     }
 
@@ -144,7 +145,7 @@ class UserController extends AbstractController
         #[CurrentUser] ?User $user
     ): JsonResponse
     {
-        $this->logger->info('Logout user id' . $user->getId(), [
+        $this->logger->info('Logout user id ' . $user->getId(), [
             'user_id' => $user->getId(),
             'email' => $user->getEmail()
         ]);

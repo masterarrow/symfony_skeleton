@@ -30,14 +30,14 @@ class UserDTO
 
     public ?array $roles = ['ROLE_USER'];
 
-    #[Assert\Length(max: 20)]
+    #[Assert\Length(min: 9, max: 12)]
     public string $phone = '';
 
-    #[Assert\Length(max: 10)]
+    #[Assert\Length(min: 2, max: 5)]
     public string $phonePrefix = '';
 
     #[Assert\NotBlank(message: 'The country field is required')]
-    #[Assert\Length(min: 2, max: 3)]
+    #[Assert\Length(length: 2)]
     public string $country;
 
     public function getId(): ?int

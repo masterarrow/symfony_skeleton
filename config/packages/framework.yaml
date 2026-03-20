@@ -25,6 +25,7 @@ framework:
 
     rate_limiter:
         login:
+            # five requests per 5 minutes, then 1 request per 5 minutes
             policy: 'token_bucket'
             limit: 5
             rate: { interval: '5 minutes' }
