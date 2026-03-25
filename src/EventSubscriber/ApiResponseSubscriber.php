@@ -53,7 +53,7 @@ class ApiResponseSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Exception handler (validation errors, abort(), etc.)
+     * Exception handler (validation errors, etc.)
      */
     public function onKernelException(ExceptionEvent $event): void
     {
