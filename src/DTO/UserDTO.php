@@ -37,7 +37,7 @@ class UserDTO
     public string $phonePrefix = '';
 
     #[Assert\NotBlank(message: 'The country field is required')]
-    #[Assert\Length(length: 2)]
+    #[Assert\Length(min: 2, max: 2)]
     public string $country;
 
     public function getId(): ?int

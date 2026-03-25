@@ -30,7 +30,7 @@ class UserRepository extends ServiceEntityRepository
 
             if ($user->getEmail() !== $dto->email) {
                 $existing = $this->findOneBy(['email' => $dto->email]);
-                if ($existing) {
+                if ($existing && $existing->getId() !== $user->getId()) {
                     throw new \RuntimeException('Email already in use');
                 }
             }

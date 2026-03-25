@@ -324,7 +324,17 @@ const proceedForm = async (form: any) => {
     }
 
     if (!res.status) {
-      toast.add({ severity: 'error', summary: res.data.error, life: 3000 });
+      if (res.data?.errors) {
+        for (const [field, messages] of Object.entries(res.data.errors)) {
+            const formField = toCamelCase(field);
+            if (form.states[formField]) {
+                form.states[formField].error = { message: messages[0] };
+                form.states[formField].invalid = true;
+            }
+        }
+      } else {
+        toast.add({ severity: 'error', summary: res.data.error, life: 3000 });
+      }
     }
   } catch (error: any) {
     toast.add({ severity: 'error', summary: 'Something went wrong', life: 3000 });
@@ -332,6 +342,8 @@ const proceedForm = async (form: any) => {
     state.loading = false
   }
 }
+
+const toCamelCase = (str: string) => str.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
 
 function onCountryChange(form: any) {
   form.phonePrefix.value = phoneCodes.value.find((data: any) => data.iso2 === form.country.value.iso2)

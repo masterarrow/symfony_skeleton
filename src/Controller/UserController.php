@@ -41,7 +41,7 @@ class UserController extends AbstractController
 
     #[Route('/create', name: 'user_store', methods: ['POST'])]
     public function store(
-        #[MapRequestPayload] UserDTO $dto,
+        #[MapRequestPayload(validationFailedStatusCode: 200)] UserDTO $dto,
         UserPasswordHasherInterface $passwordHasher,
         #[CurrentUser] ?User $user
     ): array
