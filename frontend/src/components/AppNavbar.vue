@@ -60,7 +60,7 @@ import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/stores/useAuth'
 import { sendLogout } from '@/services/api/login'
-import { useToast } from "primevue/usetoast";
+import { useToast } from 'primevue/usetoast';
 import Button from 'primevue/button';
 
 const router = useRouter()

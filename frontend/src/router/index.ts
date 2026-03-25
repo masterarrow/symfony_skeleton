@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useToast } from 'primevue/usetoast';
 import { useAuth } from '@/stores/useAuth'
 import { me } from '@/services/api/user'
 
@@ -40,6 +41,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuth()
+  const toast = useToast();
   try {
     await me()
   } catch (error: any) {
@@ -49,7 +51,11 @@ router.beforeEach(async (to, from, next) => {
   const isLoggedIn = authStore.getLoggedIn
 
   if (to.meta.requiresAuth && !isLoggedIn) {
-    next({ name: 'home' })
+    next({ name: to.name !== 'home' ? 'sign-in' : 'home' })
+
+    if (to.name !== 'home') {
+      toast.add({ severity: 'info', summary: 'Please log in', life: 3000 })
+    }
   } else if (to.meta.guestOnly && isLoggedIn) {
     next({ name: 'dashboard' })
   } else {
