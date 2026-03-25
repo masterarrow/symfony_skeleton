@@ -7,9 +7,11 @@ export const sendRegisterForm = async (data: RegisterData): Promise<RegisterResp
 }
 
 export interface RegisterResponse {
-  message?: string
-  error?: string
   status: boolean
+  data: {
+    message?: string
+    error?: string
+  }
 }
 
 export interface RegisterData {

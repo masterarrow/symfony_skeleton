@@ -324,7 +324,7 @@ const proceedForm = async (form: any) => {
     }
 
     if (!res.status) {
-      toast.add({ severity: 'error', summary: res.error, life: 3000 });
+      toast.add({ severity: 'error', summary: res.data.error, life: 3000 });
     }
   } catch (error: any) {
     toast.add({ severity: 'error', summary: 'Something went wrong', life: 3000 });

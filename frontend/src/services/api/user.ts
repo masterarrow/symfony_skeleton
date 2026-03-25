@@ -1,6 +1,11 @@
 import type { AxiosResponse } from 'axios'
 import { http } from '@/services/http'
 
+export const me = async (): Promise<{status: boolean}> => {
+  const response: AxiosResponse<{status: boolean}> = await http.get('/users/me')
+  return response.data
+}
+
 export const getProfile = async (): Promise<UserResponse> => {
   const response: AxiosResponse<UserResponse> = await http.get('/users/profile')
   return response.data
@@ -8,7 +13,10 @@ export const getProfile = async (): Promise<UserResponse> => {
 
 export interface UserResponse {
   status: boolean
-  user: IUserData
+  data: {
+    message?: string
+    user: IUserData
+  }
 }
 
 interface IUserData {

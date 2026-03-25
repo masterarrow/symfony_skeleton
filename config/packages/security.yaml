@@ -29,6 +29,7 @@ security:
 
         # Profile and logout
         - { path: ^/api/users/profile$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }        # user_profile (GET /profile)
+        - { path: ^/api/users/me$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }        # user_profile (GET /profile)
         - { path: ^/api/users/logout$, methods: [POST], roles: IS_AUTHENTICATED_FULLY }       # user_logout (POST /logout)
 
         # - { path: ^/admin, roles: ROLE_ADMIN }

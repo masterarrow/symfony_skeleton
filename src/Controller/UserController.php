@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -28,16 +28,15 @@ class UserController extends AbstractController
     ) {}
 
     #[Route('', name: 'user_list', methods: ['GET'])]
-    public function list(Request $request): JsonResponse
+    public function list(Request $request): array
     {
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', 10);
         $users = $this->userRepository->findBy([], null, $limit, ($page - 1) * $limit);
 
-        return $this->json([
-            'status' => true,
+        return [
             'users' => $users
-        ]);
+        ];
     }
 
     #[Route('/create', name: 'user_store', methods: ['POST'])]
@@ -45,7 +44,7 @@ class UserController extends AbstractController
         #[MapRequestPayload] UserDTO $dto,
         UserPasswordHasherInterface $passwordHasher,
         #[CurrentUser] ?User $user
-    ): JsonResponse
+    ): array
     {
         try {
             $newUser = $this->userRepository->saveFromDto($dto, $passwordHasher);
@@ -60,26 +59,22 @@ class UserController extends AbstractController
                     : 'id ' . $user->getId() . ' email ' . $user->getEmail()
             ]);
 
-            return $this->json([
+            return [
                 'status' => true,
                 'message' => 'Success'
-            ], $isNew ? 201 : 200);
+            ];
         } catch (\Exception $e) {
             $this->logger->error('User save failed: ' . $e->getMessage());
-            return $this->json([
-                'status' => false,
-                'error' => $e->getMessage()
-            ]);
+            throw new HttpException(200, $e->getMessage());
         }
     }
 
     #[Route('/user/{id}', name: 'user_show', methods: ['GET'])]
-    public function show(User $user): JsonResponse
+    public function show(User $user): array
     {
-        return $this->json([
-            'status' => true,
+        return [
             'user' => $user
-        ]);
+        ];
     }
 
     #[Route('/login', name: 'user_login', methods: ['POST'])]
@@ -88,23 +83,17 @@ class UserController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
         RateLimiterFactoryInterface $loginLimiter,
-    ): JsonResponse
+    ): array
     {
         $limiter = $loginLimiter->create($request->getClientIp());
         if (!$limiter->consume(1)->isAccepted()) {
-            return $this->json([
-                'status' => false,
-                'error' => 'Too many attempts'
-            ]);
+            throw new HttpException(200, 'Too many attempts');
         }
 
         $user = $this->userRepository->findOneBy(['email' => $dto->email]);
 
         if (!$user || !$passwordHasher->isPasswordValid($user, $dto->password)) {
-            return $this->json([
-                'status' => false,
-                'error' => 'Invalid credentials'
-            ]);
+            throw new HttpException(200, 'Invalid credentials');
         }
 
         $session = $request->getSession();
@@ -117,25 +106,31 @@ class UserController extends AbstractController
             'email' => $user->getEmail()
         ]);
 
-        return $this->json([
-            'status' => true,
+        return [
+            'message' => 'Login successful',
             'user' => [
                 'id' => $user->getId(),
                 'full_name' => $user->getFullName(),
                 'email' => $user->getEmail(),
                 'roles' => $user->getRoles()
-            ],
-            'message' => 'Login successful'
-        ]);
+            ]
+        ];
+    }
+
+    #[Route('/me', name: 'user_login_check', methods: ['GET'])]
+    public function me(): array
+    {
+        return [
+            'message' => 'OK'
+        ];
     }
 
     #[Route('/profile', name: 'user_profile', methods: ['GET'])]
-    public function profile(#[CurrentUser] ?User $user): JsonResponse
+    public function profile(#[CurrentUser] ?User $user): array
     {
-        return $this->json([
-            'status' => true,
+        return [
             'user' => $user
-        ]);
+        ];
     }
 
     #[Route('/logout', name: 'user_logout', methods: ['POST'])]
@@ -143,7 +138,7 @@ class UserController extends AbstractController
         Request $request,
         TokenStorageInterface $tokenStorage,
         #[CurrentUser] ?User $user
-    ): JsonResponse
+    ): array
     {
         $this->logger->info('Logout user id ' . $user->getId(), [
             'user_id' => $user->getId(),
@@ -153,13 +148,13 @@ class UserController extends AbstractController
         $request->getSession()->invalidate();
         $tokenStorage->setToken(null);
 
-        return $this->json([
-            'status' => true
-        ]);
+        return [
+            'message' => 'Logged out'
+        ];
     }
 
     #[Route('/user/{id}', name: 'user_delete', methods: ['DELETE'])]
-    public function delete(User $user, #[CurrentUser] ?User $current): JsonResponse
+    public function delete(User $user, #[CurrentUser] ?User $current): array
     {
         $this->logger->info('Delete user id ' . $user->getId(), [
             'user_id' => $user->getId(),
@@ -171,8 +166,8 @@ class UserController extends AbstractController
 
         $this->userRepository->remove($user, true);
 
-        return $this->json([
-            'status' => true
-        ]);
+        return [
+            'message' => 'Successfully deleted'
+        ];
     }
 }

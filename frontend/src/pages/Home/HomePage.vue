@@ -44,17 +44,17 @@ const authStore = useAuth()
 
 const loadUser = async () => {
   try {
-      const res = await getProfile()
+    const res = await getProfile()
 
     if (res.status) {
-        const user = res.user
+        const user = res.data.user
         authStore.setEmail(user.email)
         authStore.setLoggedIn(true)
-        authStore.setFullName(res.user.full_name)
-        authStore.setRoles(res.user.roles)
+        authStore.setFullName(user.full_name)
+        authStore.setRoles(user.roles)
     }
   } catch (error: any) {
-    toast.add({ severity: 'error', summary: error.message, life: 3000 });
+    toast.add({ severity: 'error', summary: error.data.message, life: 3000 });
   }
 }
 

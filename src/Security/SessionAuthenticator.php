@@ -51,7 +51,9 @@ class SessionAuthenticator extends AbstractAuthenticator implements Authenticati
     {
         return new JsonResponse([
             'status' => false,
-            'message' => 'Authentication required'
+            'data' => [
+                'message' => 'Authentication required'
+            ]
         ], Response::HTTP_UNAUTHORIZED);
     }
 
@@ -59,7 +61,9 @@ class SessionAuthenticator extends AbstractAuthenticator implements Authenticati
     {
         return new JsonResponse([
             'status' => false,
-            'message' => 'Authentication required'
+            'data' => [
+                'message' => 'Authentication required'
+            ]
         ], Response::HTTP_UNAUTHORIZED);
     }
 }

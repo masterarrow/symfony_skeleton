@@ -12,10 +12,12 @@ export const sendLogout = async (): Promise<{ status: boolean }> => {
 }
 
 export interface LoginResponse {
-  message: string
-  error: string
   status: boolean
-  user: LoginUser
+  data: {
+    message: string
+    error: string
+    user: LoginUser
+  }
 }
 
 export interface LoginData {

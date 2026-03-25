@@ -111,17 +111,18 @@ const proceedForm = async (form: any) => {
 
     const res = await sendLoginForm({ email, password })
 
-    if (res?.error) {
-      toast.add({ severity: 'error', summary: res.error, life: 3000 });
-      authStore.setError(res.error)
+    if (res.data?.error) {
+      toast.add({ severity: 'error', summary: res.data.error, life: 3000 });
+      authStore.setError(res.data.error)
       form.reset()
     }
 
     if (res.status) {
-      toast.add({ severity: 'success', summary: res.message, life: 3000 });
+      const user = res.data.user
+      toast.add({ severity: 'success', summary: res.data.message, life: 3000 });
       authStore.setLoggedIn(true)
-      authStore.setFullName(res.user.full_name)
-      authStore.setRoles(res.user.roles)
+      authStore.setFullName(user.full_name)
+      authStore.setRoles(user.roles)
       router.push({ name: 'dashboard' })
     }
   } catch (error: any) {

@@ -27,3 +27,7 @@ services:
     App\EventListener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    App\EventSubscriber\ApiResponseSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
