@@ -11,7 +11,7 @@ services:
       APP_ENV: ${APP_ENV:-dev}
       DATABASE_URL: mysql://${MYSQL_USER:-symfony}:${MYSQL_PASSWORD:-qwerty}@database:3306/${MYSQL_DATABASE:-db}?serverVersion=${MYSQL_VERSION:-8}&charset=utf8mb4
     volumes:
-      - ./:/app
+      - ./:/app:rw
       - ./docker/php/conf.d:/usr/local/etc/php/conf.d:ro
     extra_hosts:
       - host.docker.internal:host-gateway
@@ -29,15 +29,10 @@ services:
     image: node:20-alpine
     working_dir: /app/frontend
     volumes:
-      - ./:/app
-    ports:
-      - "5173:5173"
+      - ./:/app:rw
     command: sh -c "if [ ! -d node_modules ]; then npm install; fi; npm run dev -- --host"
     environment:
       NODE_ENV: development
-    depends_on:
-      - php
-      - nginx
 
   nginx:
     container_name: api-nginx
@@ -47,10 +42,11 @@ services:
       - "${HTTP_PORT:-80}:80"
       - "${HTTPS_PORT:-443}:443"
     volumes:
-      - ./:/app
+      - ./:/app:ro
       - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - php
+      - frontend
 
   database:
     container_name: api-database
@@ -71,3 +67,7 @@ services:
 
 volumes:
   database_data:
+
+networks:
+  default:
+    name: symfony_network

@@ -2,6 +2,13 @@
 
 set -e
 
+check_hosts() {
+    local DOMAIN="symfony-api.wip"
+    if ! grep -q "$DOMAIN" /etc/hosts; then
+        echo "127.0.0.1 $DOMAIN" | sudo tee -a /etc/hosts
+    fi
+}
+
 show_help() {
     echo "Usage: $0 [OPTION]"
     echo "Docker for Symfony + Vue.js"
@@ -18,10 +25,13 @@ show_help() {
 
 case "$1" in
     -b|--build)
+        check_hosts
         echo "🔨 Building images and starting containers..."
-        echo "Frontend available at http://localhost:5173"
-        echo "Backend available at http://localhost:8080/api"
         docker compose up -d --build
+        echo "------------------------------------------------------------------"
+        echo "Frontend available at http://symfony-api.wip"
+        echo "Backend available at http://symfony-api.wip/api"
+        echo "------------------------------------------------------------------"
         ;;
     -s|--stop)
         echo "⏸️ Stoping containers..."
@@ -44,8 +54,8 @@ case "$1" in
         ;;
     "")
         echo "🚀 Starting containers in the background..."
-        echo "Frontend available at http://localhost:5173"
-        echo "Backend available at http://localhost:8080/api"
+        echo "Frontend available at http://symfony-api.wip"
+        echo "Backend available at http://symfony-api.wip/api"
         docker compose up -d
         ;;
     *)
