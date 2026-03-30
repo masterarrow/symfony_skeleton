@@ -1,8 +1,8 @@
 import type { AxiosResponse } from 'axios'
 import { http } from '@/services/http'
 
-export const me = async (): Promise<{status: boolean}> => {
-  const response: AxiosResponse<{status: boolean}> = await http.get('/users/me')
+export const me = async (): Promise<MeResponse> => {
+  const response: AxiosResponse<MeResponse> = await http.get('/users/me')
   return response.data
 }
 
@@ -28,5 +28,12 @@ interface IUserData {
   phone: string
   phone_prefix: string
   country: string
-  roles: string[]
+}
+
+export interface MeResponse {
+  status: boolean
+  data: {
+    roles: string[]
+    balance: number
+  }
 }

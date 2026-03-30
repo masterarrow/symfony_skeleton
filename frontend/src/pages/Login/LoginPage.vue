@@ -122,7 +122,6 @@ const proceedForm = async (form: any) => {
       toast.add({ severity: 'success', summary: res.data.message, life: 3000 });
       authStore.setLoggedIn(true)
       authStore.setFullName(user.full_name)
-      authStore.setRoles(user.roles)
       router.push({ name: 'dashboard' })
     }
   } catch (error: any) {

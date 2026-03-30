@@ -42,6 +42,9 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[ORM\Column(length: 3)]
     private string $country;
 
+    #[ORM\Column]
+    private float $balance = 0.00;
+
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $createdAt = null;
 
@@ -185,6 +188,17 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->getEmail();
     }
 
+    public function getBalance(): float
+    {
+        return $this->balance;
+    }
+
+    public function setBalance(float $balance): self
+    {
+        $this->balance = $balance;
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         return [
@@ -196,7 +210,6 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
             'phone'        => $this->getPhone() ? (string) $this->getPhone() : null,
             'phone_prefix'  => $this->getPhonePrefix(),
             'country'      => $this->getCountry(),
-            'roles'        => $this->getRoles(),
             'created_at'   => $this->getCreatedAt()?->format('Y-m-d H:i:s'),
             'updated_at'   => $this->getUpdatedAt()?->format('Y-m-d H:i:s'),
         ];

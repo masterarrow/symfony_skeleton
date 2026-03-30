@@ -51,7 +51,6 @@ const loadUser = async () => {
         authStore.setEmail(user.email)
         authStore.setLoggedIn(true)
         authStore.setFullName(user.full_name)
-        authStore.setRoles(user.roles)
     }
   } catch (error: any) {
     toast.add({ severity: 'error', summary: error.data.message, life: 3000 });

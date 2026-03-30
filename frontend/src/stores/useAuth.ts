@@ -8,6 +8,7 @@ export const useAuth = defineStore('auth', {
     error: useStorage('auth.error', ''),
     loggedIn: useStorage('auth.loggedIn', false),
     roles: useStorage('auth.roles', ['']),
+    balance: useStorage('auth.balance', 0),
   }),
   actions: {
     setEmail(email: string): void {
@@ -18,6 +19,9 @@ export const useAuth = defineStore('auth', {
     },
     setRoles(roles: string[]): void {
       this.roles = roles
+    },
+    setBalance(balance: number): void {
+      this.balance = balance
     },
     setError(err: string): void {
       this.error = err
@@ -40,5 +44,6 @@ export const useAuth = defineStore('auth', {
     getError: (state) => state.error,
     getLoggedIn: (state) => state.loggedIn,
     getRoles: (state) => state.roles,
+    getBalance: (state) => state.balance
   },
 })

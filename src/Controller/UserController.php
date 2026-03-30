@@ -111,17 +111,17 @@ class UserController extends AbstractController
             'user' => [
                 'id' => $user->getId(),
                 'full_name' => $user->getFullName(),
-                'email' => $user->getEmail(),
-                'roles' => $user->getRoles()
+                'email' => $user->getEmail()
             ]
         ];
     }
 
     #[Route('/me', name: 'user_login_check', methods: ['GET'])]
-    public function me(): array
+    public function me(#[CurrentUser] ?User $user): array
     {
         return [
-            'message' => 'OK'
+            'roles' => $user->getRoles(),
+            'balance' => $user->getBalance()
         ];
     }
 

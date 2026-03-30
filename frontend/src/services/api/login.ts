@@ -29,5 +29,4 @@ export interface LoginUser {
   id: number
   full_name: string
   email: string
-  roles: string[]
 }

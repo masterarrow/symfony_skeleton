@@ -43,7 +43,11 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuth()
   const toast = useToast();
   try {
-    await me()
+    const result = await me()
+    if (result.status) {
+      authStore.setRoles(result.data.roles)
+      authStore.setBalance(result.data.balance)
+    }
   } catch (error: any) {
     authStore.reset()
   }
