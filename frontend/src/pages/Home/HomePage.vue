@@ -42,6 +42,7 @@ const router = useRouter()
 const toast = useToast();
 const authStore = useAuth()
 
+/// Methods
 const loadUser = async () => {
   try {
     const res = await getProfile()

@@ -10,6 +10,7 @@ import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify';
 import Aura from '@primeuix/themes/aura';
 import App from './App.vue'
 import './assets/main.css'
+import 'primeicons/primeicons.css'
 
 const app = createApp(App)
 

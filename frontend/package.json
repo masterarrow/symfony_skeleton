@@ -16,6 +16,7 @@
         "@vueuse/core": "^13.3.0",
         "axios": "^1.4.0",
         "pinia": "^3.0.3",
+        "primeicons": "^7.0.0",
         "primevue": "^4.5.4",
         "tailwindcss": "^4.1.8",
         "tailwindcss-primeui": "^0.6.1",

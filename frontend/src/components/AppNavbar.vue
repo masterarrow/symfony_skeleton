@@ -61,7 +61,7 @@
                     <span class="font-bold!">{{ authStore.getFullName }}</span>
                     <span class="text-sm">
                         Balance:
-                        <span class="text-primary">{{ formatMoney(authStore.getBalance) }}</span>
+                        <span :class="authStore.getBalance > 0 ? 'text-primary' : 'text-red-600' ">{{ formatMoney(authStore.getBalance) }}</span>
                     </span>
                 </span>
             </Button>
