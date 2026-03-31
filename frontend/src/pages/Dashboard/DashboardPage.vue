@@ -78,21 +78,21 @@
                 </p>
                 <p class="text-xl font-extrabold flex items-center gap-3">
                     <span class="text-gray-400">Creation Date:</span>
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-1.5">
                         <i class="pi pi-clock text-gray-400" style="font-size: 1rem"></i>
                         {{ domaiInfo.cr_date }}
                     </div>
                 </p>
                 <p class="text-xl font-extrabold flex items-center gap-3">
                     <span class="text-gray-400">Updated Date:</span>
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-1.5">
                         <i class="pi pi-clock text-gray-400" style="font-size: 1rem"></i>
                         {{ domaiInfo.updated_date }}
                     </div>
                 </p>
                 <p class="text-xl font-extrabold flex items-center gap-3">
                     <span class="text-gray-400">Expiration Date:</span>
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-1.5">
                         <i class="pi pi-clock text-gray-400" style="font-size: 1rem"></i>
                         {{ domaiInfo.exp_date }}
                     </div>
