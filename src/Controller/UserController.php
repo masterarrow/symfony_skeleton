@@ -17,6 +17,7 @@ use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/users')]
 class UserController extends AbstractController
@@ -28,6 +29,7 @@ class UserController extends AbstractController
     ) {}
 
     #[Route('', name: 'user_list', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function list(Request $request): array
     {
         $page = $request->query->getInt('page', 1);
@@ -35,7 +37,9 @@ class UserController extends AbstractController
         $users = $this->userRepository->findBy([], null, $limit, ($page - 1) * $limit);
 
         return [
-            'users' => $users
+            'users' => $users,
+            'page' => $page,
+            'per_page' => $limit
         ];
     }
 
@@ -47,6 +51,9 @@ class UserController extends AbstractController
     ): array
     {
         try {
+            if (empty($dto->getId()) && $user) {
+                $dto->setId($user->getId());
+            }
             $newUser = $this->userRepository->saveFromDto($dto, $passwordHasher);
 
             $isNew = $dto->getId() === null;
@@ -70,6 +77,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}', name: 'user_show', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function show(User $user): array
     {
         return [
@@ -117,6 +125,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/me', name: 'user_login_check', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function me(#[CurrentUser] ?User $user): array
     {
         return [
@@ -126,6 +135,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/profile', name: 'user_profile', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function profile(#[CurrentUser] ?User $user): array
     {
         return [
@@ -134,6 +144,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/logout', name: 'user_logout', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
     public function logout(
         Request $request,
         TokenStorageInterface $tokenStorage,
@@ -154,6 +165,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}', name: 'user_delete', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(User $user, #[CurrentUser] ?User $current): array
     {
         $this->logger->info('Delete user id ' . $user->getId(), [

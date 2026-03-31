@@ -40,15 +40,32 @@
                 >
                     Sign up
                 </a>
-                <Button
-                    v-if="authStore.getLoggedIn"
-                    type="button"
-                    severity="secondary"
-                    @click="logout"
-                    label="Log out"
-                    class="px-4 py-2 text-base font-medium text-indigo-600 bg-white rounded-md border border-transparent hover:bg-gray-50"
-                    :loading="state.loading" />
             </span>
+            <Button
+                ref="anchor"
+                v-if="authStore.getLoggedIn"
+                type="button"
+                severity="secondary"
+                variant="text"
+                @mouseenter="menu.show($event)"
+                @mouseleave="onMouseLeave"
+                class="overflow-hidden flex items-center gap-2 cursor-pointer"
+                :loading="state.loading"
+            >
+                <Avatar
+                    :label="authStore.getFullName.charAt(0).toUpperCase()"
+                    style="background-color: #ece9fc; color: #2a1261"
+                    shape="circle"
+                    size="large" />
+                <span class="inline-flex flex-col items-start">
+                    <span class="font-bold!">{{ authStore.getFullName }}</span>
+                    <span class="text-sm">
+                        Balance:
+                        <span class="text-primary">{{ formatMoney(authStore.getBalance) }}</span>
+                    </span>
+                </span>
+            </Button>
+            <Menu ref="menu" :model="userMenu" :popup="true" @mouseenter="clearMenuTimeout" @mouseleave="onMouseLeave" />
           </div>
         </nav>
       </div>
@@ -56,17 +73,22 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/stores/useAuth'
 import { sendLogout } from '@/services/api/login'
+import { formatMoney } from '@/composables/formatMoney'
 import { useToast } from 'primevue/usetoast';
 import Button from 'primevue/button';
+import Menu from 'primevue/menu';
+import Avatar from 'primevue/avatar';
 
 const router = useRouter()
 const authStore = useAuth()
 const state = reactive({ loading: false })
 const toast = useToast();
+const menu = ref();
+let timeout: ReturnType<typeof setTimeout> | null = null;
 
 const navLinks = [
   { name: 'Product', href: '#', auth: true },
@@ -75,6 +97,35 @@ const navLinks = [
   { name: 'FAQ', href: '#', auth: false },
   { name: 'Support', href: '#', auth: false },
 ];
+
+const userMenu = [
+  {
+    label: 'Profile',
+    icon: '',
+    command: () => {
+      router.push({ name: 'profile' })
+    }
+  },
+  {
+    label: 'Logout',
+    icon: '',
+    command: () => {
+      logout()
+    }
+  }
+]
+
+const onMouseLeave = () => {
+    timeout = setTimeout(() => {
+        menu.value.hide();
+    }, 200);
+};
+
+const clearMenuTimeout = () => {
+    if (timeout) {
+        clearTimeout(timeout);
+    }
+};
 
 const logout = async () => {
   state.loading = true

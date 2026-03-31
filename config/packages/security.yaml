@@ -22,14 +22,3 @@ security:
             entry_point: App\Security\SessionAuthenticator
 
     access_control:
-        # User
-        - { path: ^/api/users$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }              # user_list (GET /users)\
-        - { path: ^/api/users/user/\d+$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }     # user_show (GET /users/{id})
-        - { path: ^/api/users/user/\d+$, methods: [DELETE], roles: IS_AUTHENTICATED_FULLY }  # user_delete (DELETE /users/{id})
-
-        # Profile and logout
-        - { path: ^/api/users/profile$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }        # user_profile (GET /profile)
-        - { path: ^/api/users/me$, methods: [GET], roles: IS_AUTHENTICATED_FULLY }        # user_profile (GET /profile)
-        - { path: ^/api/users/logout$, methods: [POST], roles: IS_AUTHENTICATED_FULLY }       # user_logout (POST /logout)
-
-        # - { path: ^/admin, roles: ROLE_ADMIN }

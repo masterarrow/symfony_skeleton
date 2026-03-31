@@ -78,17 +78,8 @@ const resolver = ref(zodResolver(
             .trim()
             .pipe(
                 z.string()
-                    .min(5, 'Must be at least 5 characters.')
-                    .max(30, 'Must be at most 30 characters.')
+                    .min(1, 'Password is required.')
             )
-            .pipe(
-                z.string()
-                .regex(/[a-z]/, 'Must contain a lowercase letter.')
-            )
-            .pipe(
-                z.string()
-                .regex(/\d/, 'Must contain a number.')
-            ),
     })
 ));
 

@@ -14,8 +14,8 @@ export const sendLogout = async (): Promise<{ status: boolean }> => {
 export interface LoginResponse {
   status: boolean
   data: {
-    message: string
-    error: string
+    message?: string
+    error?: string
     user: LoginUser
   }
 }
