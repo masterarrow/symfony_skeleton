@@ -1,15 +1,14 @@
 import type { AxiosResponse } from 'axios'
 import { http } from '@/services/http'
+import type { ApiResponce } from '@/services/api/apiResponce'
 
 export const domainWhois = async (domain: string): Promise<WhoisResponse> => {
   const response: AxiosResponse<WhoisResponse> = await http.get(`/domains/whois/${domain}`)
   return response.data
 }
 
-export interface WhoisResponse {
-  status: boolean
+export interface WhoisResponse extends ApiResponce {
   data: {
-    error?: string
     domain: string
     available: boolean
     registrar: string

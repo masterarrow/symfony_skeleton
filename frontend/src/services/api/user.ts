@@ -1,5 +1,6 @@
 import type { AxiosResponse } from 'axios'
 import { http } from '@/services/http'
+import type { ApiResponce } from '@/services/api/apiResponce'
 
 export const me = async (): Promise<MeResponse> => {
   const response: AxiosResponse<MeResponse> = await http.get('/users/me')
@@ -11,8 +12,7 @@ export const getProfile = async (): Promise<UserResponse> => {
   return response.data
 }
 
-export interface UserResponse {
-  status: boolean
+export interface UserResponse extends ApiResponce {
   data: {
     message?: string
     user: IUserData
@@ -31,7 +31,6 @@ interface IUserData {
 }
 
 export interface MeResponse {
-  status: boolean
   data: {
     roles: string[]
     balance: number

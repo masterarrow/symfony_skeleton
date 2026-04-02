@@ -324,8 +324,8 @@ const proceedForm = async (form: any) => {
     }
 
     if (!res.status) {
-      if (res.data?.errors) {
-        for (const [field, messages] of Object.entries(res.data.errors)) {
+      if (res?.errors) {
+        for (const [field, messages] of Object.entries(res.errors)) {
             const formField = toCamelCase(field);
             if (form.states[formField]) {
                 form.states[formField].error = { message: messages[0] };

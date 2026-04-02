@@ -231,8 +231,8 @@ const proceedForm = async (form: any) => {
 
         const res = await domainWhois(domain)
 
-        if (res.data?.error) {
-            message.value = res.data.error
+        if (res?.error) {
+            message.value = res.error
         }
 
         if (res.status) {

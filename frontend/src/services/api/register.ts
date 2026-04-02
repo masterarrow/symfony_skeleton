@@ -1,17 +1,15 @@
 import type { AxiosResponse } from 'axios'
 import { http } from '@/services/http'
+import type { ApiResponce } from '@/services/api/apiResponce'
 
 export const sendRegisterForm = async (data: RegisterData): Promise<RegisterResponse> => {
   const response: AxiosResponse<RegisterResponse> = await http.post('/users/create', data)
   return response.data
 }
 
-export interface RegisterResponse {
-  status: boolean
+export interface RegisterResponse extends ApiResponce {
   data: {
     message?: string
-    error?: string
-    errors?: Record<string, string[]>
   }
 }
 

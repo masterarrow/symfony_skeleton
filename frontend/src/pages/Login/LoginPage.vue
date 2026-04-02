@@ -102,9 +102,9 @@ const proceedForm = async (form: any) => {
 
     const res = await sendLoginForm({ email, password })
 
-    if (res.data?.error) {
+    if (res?.error) {
       toast.add({ severity: 'error', summary: res.data.error, life: 3000 });
-      authStore.setError(res.data.error)
+      authStore.setError(res.error)
       form.reset()
     }
 

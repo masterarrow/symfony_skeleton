@@ -54,17 +54,18 @@ class ApiResponseSubscriber implements EventSubscriberInterface
             : 500;
 
         $responseData = [
-            'status' => false,
-            'data' => [
-                'error' => $exception->getMessage()
-            ]
+            'status' => false
         ];
+
+        if (!empty($exception->getMessage())) {
+            $responseData['error'] = $exception->getMessage();
+        }
 
         // Extract validation errors
         $previous = $exception->getPrevious();
         if ($previous instanceof ValidationFailedException) {
-            $responseData['data']['error'] = 'Validation failed';
-            $responseData['data']['errors'] = $this->formatValidationErrors($previous);
+            $responseData['error'] = 'Validation failed';
+            $responseData['errors'] = $this->formatValidationErrors($previous);
         }
 
         $event->setResponse(new JsonResponse($responseData, $statusCode));

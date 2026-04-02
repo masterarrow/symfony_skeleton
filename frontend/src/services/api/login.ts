@@ -1,5 +1,6 @@
 import type { AxiosResponse } from 'axios'
 import { http } from '@/services/http'
+import type { ApiResponce } from '@/services/api/apiResponce'
 
 export const sendLoginForm = async (data: LoginData): Promise<LoginResponse> => {
   const response: AxiosResponse<LoginResponse> = await http.post('/users/login', data)
@@ -11,11 +12,9 @@ export const sendLogout = async (): Promise<{ status: boolean }> => {
   return response.data
 }
 
-export interface LoginResponse {
-  status: boolean
+export interface LoginResponse extends ApiResponce {
   data: {
     message?: string
-    error?: string
     user: LoginUser
   }
 }
