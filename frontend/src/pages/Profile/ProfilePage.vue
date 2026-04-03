@@ -183,7 +183,6 @@
 
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { getProfile } from '@/services/api/user'
 import { sendRegisterForm } from '@/services/api/register'
 import { useAuth } from '@/stores/useAuth'
@@ -267,7 +266,6 @@ const selectedCountry = ref(false);
 const counties = ref();
 const phoneCodes = ref();
 const state = reactive({ loading: false, loaded: false });
-const router = useRouter()
 const authStore = useAuth()
 
 /// Methods

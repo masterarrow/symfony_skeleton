@@ -30,7 +30,7 @@ interface IUserData {
   country: string
 }
 
-export interface MeResponse {
+export interface MeResponse extends ApiResponce {
   data: {
     roles: string[]
     balance: number
